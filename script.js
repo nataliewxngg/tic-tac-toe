@@ -30,22 +30,27 @@ const gameboard = (function() {
     }
 
     // set the mark of a cell on the board
-    const setMark = (row, col, mark) => {
-        board[row-1][col-1].setMark(mark);
-        console.log('done!');
-    }
+    const setMark = (row, col, mark) => board[row-1][col-1].setMark(mark); 
 
     // determine if a player has won/loss
     const checkGameStatus = () => {
         // check rows
         for (let i = 0; i < 3; ++i) {
-            if (board[i][0].getMark() == board[i][1].getMark() && board[i][1].getMark() == board[i][2].getMark() && board[i][0].getMark() != null)
+            if (
+                board[i][0].getMark() == board[i][1].getMark() && 
+                board[i][1].getMark() == board[i][2].getMark() && 
+                board[i][0].getMark() != null
+            )
                 return board[i][0].getMark();
         }
 
         // check columns
         for (let i = 0; i < 3; ++i) {
-            if (board[0][i].getMark() == board[1][i].getMark() && board[1][i].getMark() == board[2][i].getMark() && board[0][i].getMark() != null)
+            if (
+                board[0][i].getMark() == board[1][i].getMark() && 
+                board[1][i].getMark() == board[2][i].getMark() && 
+                board[0][i].getMark() != null
+            )
                 return board[0][i].getMark();
         }
 
@@ -60,11 +65,20 @@ const gameboard = (function() {
         return null;
     }
 
+    // clear the gameboard
+    const clearBoard = () => {
+        for (let i = 0; i < rows; ++i) {
+            for (let j = 0; j < cols; ++j) 
+                board[i][j].setMark(null);
+        }
+    }
+
     return {
         getBoard,
         displayBoard,
         setMark,
-        checkGameStatus
+        checkGameStatus,
+        clearBoard
     }
 })();
 
@@ -85,49 +99,45 @@ function Player(name, mark) {
     const getName = () => name;
     const getMark = () => mark;
 
-    const promptTurn = () => {
-        let row = prompt('Enter the row number: ');
-        let col = prompt('Enter the column number: ');
-
-        return {row, col};
-    }
-
     return {
         getName,
-        getMark,
-        promptTurn
+        getMark
     }
 }
 
-function GameController() {
+const game = (function() {
     const player1 = Player('Natalie', 'X');
     const player2 = Player('Lorraine', 'O');
     let currentPlayer = player1;
+    console.log(`It's ${currentPlayer.getName()}'s turn!`);
 
     // play a single round
-    const playRound = () => {
-        gameboard.displayBoard();
-        console.log(`It's ${currentPlayer.getName()}'s turn!`)
+    const playRound = (row, col) => {
 
-        // get the current player's move
-        const {row, col} = currentPlayer.promptTurn();
+        // set the mark according to current parameters and player mark
         gameboard.setMark(row, col, currentPlayer.getMark());
 
-        // change the current player
-        if (gameboard.checkGameStatus() != null) {   
-            console.log(`${currentPlayer.getName()} wins!`);
-            gameboard.clearBoard();
-            return ;
-        }
         gameboard.displayBoard();
 
+        // check if the game is over
+        if (gameboard.checkGameStatus() != null) {   
+            console.log(`${currentPlayer.getName()} wins!`);
+            restartGame();
+            return ;
+        }
+
+        // update the current player
         currentPlayer == player1 ? currentPlayer = player2 : currentPlayer = player1;
+        console.log(`It's ${currentPlayer.getName()}'s turn!`);
+    }
+
+    // refresh variables for a new game
+    const restartGame = () => {
+        gameboard.clearBoard();
+        currentPlayer = player1;    
     }
 
     return {
         playRound
     }
-}
-
-// MAIN
-const game = GameController();
+})();
