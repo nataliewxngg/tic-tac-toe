@@ -29,16 +29,42 @@ const gameboard = (function() {
         console.log(displayStr);
     }
 
-    // set the mark of a cell
+    // set the mark of a cell on the board
     const setMark = (row, col, mark) => {
         board[row-1][col-1].setMark(mark);
         console.log('done!');
     }
 
+    // determine if a player has won/loss
+    const checkGameStatus = () => {
+        // check rows
+        for (let i = 0; i < 3; ++i) {
+            if (board[i][0].getMark() == board[i][1].getMark() && board[i][1].getMark() == board[i][2].getMark() && board[i][0].getMark() != null)
+                return board[i][0].getMark();
+        }
+
+        // check columns
+        for (let i = 0; i < 3; ++i) {
+            if (board[0][i].getMark() == board[1][i].getMark() && board[1][i].getMark() == board[2][i].getMark() && board[0][i].getMark() != null)
+                return board[0][i].getMark();
+        }
+
+        // check diagonals
+        if (
+            (board[0][0].getMark() == board[1][1].getMark() && board[1][1].getMark() == board[2][2].getMark() || 
+            board[0][2].getMark() == board[1][1].getMark() && board[1][1].getMark() == board[2][0].getMark()) && 
+            board[1][1].getMark() != null
+        )
+            return board[0][0].getMark();
+
+        return null;
+    }
+
     return {
         getBoard,
         displayBoard,
-        setMark
+        setMark,
+        checkGameStatus
     }
 })();
 
@@ -85,14 +111,17 @@ function GameController() {
 
         // get the current player's move
         const {row, col} = currentPlayer.promptTurn();
-        // console.log(row);
-        // console.log(col);
         gameboard.setMark(row, col, currentPlayer.getMark());
 
         // change the current player
-        currentPlayer == player1 ? currentPlayer = player2 : currentPlayer = player1;
+        if (gameboard.checkGameStatus() != null) {   
+            console.log(`${currentPlayer.getName()} wins!`);
+            gameboard.clearBoard();
+            return ;
+        }
         gameboard.displayBoard();
-        console.log(gameboard.getBoard());
+
+        currentPlayer == player1 ? currentPlayer = player2 : currentPlayer = player1;
     }
 
     return {
@@ -102,4 +131,3 @@ function GameController() {
 
 // MAIN
 const game = GameController();
-game.playRound();
