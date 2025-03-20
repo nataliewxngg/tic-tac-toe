@@ -150,29 +150,43 @@ const game = (function() {
 const displayController = (function() {
     const boardDiv = document.getElementById('board');
     const playerDiv = document.querySelector('p');
-    const cells = document.querySelectorAll('.cell');
 
     const updateText = () => { playerDiv.textContent = `It's ${game.getCurrentPlayer().getName()}'s turn!`;}
+
+    // add an event listener to respond to the click of each individual cell
+    const addEventListeners = (cells) => {
+        cells.forEach(cell => {
+            cell.addEventListener('click', () => {
+                console.log(cell.textContent);
+                if (cell.textContent == '') {
+                    cell.textContent = game.getCurrentPlayer().getMark();
+                    game.playRound(cell.getAttribute('row'), cell.getAttribute('col'));
+                    updateBoard();
+                    updateText();
+                } 
+            });
+        });   
+    }
     
     // display the most updated version of the gameboard in the DOM
-    const updateBoard = (function() {
+    const updateBoard = () => {
+        boardDiv.textContent = '';
+
         for (let i = 0; i < 9; ++i) {
             const cell = document.createElement('div');
             cell.classList.add('cell');
+            cell.setAttribute('row', Math.floor(i/3));
+            cell.setAttribute('col', i%3);
 
             // set the mark of each cell
             cell.textContent = gameboard.getBoard()[Math.floor(i/3)][i%3].getMark();
             boardDiv.appendChild(cell);
-
-            // add an event listener to each cell
-            cell.addEventListener('click', () => {
-                if (cell.textContent == '') {
-                    cell.textContent = game.getCurrentPlayer().getMark();
-                    game.playRound(Math.floor(i/3), i%3);
-                    updateText();
-                } 
-            });
         }
+
+        addEventListeners(document.querySelectorAll('.cell'));
         updateText();
-    })();
+    }
+
+    // initial display of the game
+    updateBoard();
 })();
