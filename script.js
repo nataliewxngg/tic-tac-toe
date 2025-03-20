@@ -15,7 +15,7 @@ const gameboard = (function() {
     const getBoard = () => board.slice();
 
     // display the gameboard in the console
-    const displayBoard = () => {
+    const printBoard = () => {
         let displayStr = '';
         for (let i = 0; i < rows; ++i) {
             for (let j = 0; j < cols; ++j) {
@@ -30,7 +30,9 @@ const gameboard = (function() {
     }
 
     // set the mark of a cell on the board
-    const setMark = (row, col, mark) => board[row-1][col-1].setMark(mark); 
+    const setMark = (row, col, mark) => { 
+        board[row][col].setMark(mark); 
+    }
 
     // determine if a player has won/loss
     const checkGameStatus = () => {
@@ -75,7 +77,7 @@ const gameboard = (function() {
 
     return {
         getBoard,
-        displayBoard,
+        printBoard,
         setMark,
         checkGameStatus,
         clearBoard
@@ -117,7 +119,7 @@ const game = (function() {
         // set the mark according to current parameters and player mark
         gameboard.setMark(row, col, currentPlayer.getMark());
 
-        gameboard.displayBoard();
+        gameboard.printBoard();
 
         // check if the game is over
         if (gameboard.checkGameStatus() != null) {   
@@ -137,7 +139,40 @@ const game = (function() {
         currentPlayer = player1;    
     }
 
+    const getCurrentPlayer = () => currentPlayer;
+
     return {
-        playRound
+        playRound,
+        getCurrentPlayer
     }
+})();
+
+const displayController = (function() {
+    const boardDiv = document.getElementById('board');
+    const playerDiv = document.querySelector('p');
+    const cells = document.querySelectorAll('.cell');
+
+    const updateText = () => { playerDiv.textContent = `It's ${game.getCurrentPlayer().getName()}'s turn!`;}
+    
+    // display the most updated version of the gameboard in the DOM
+    const updateBoard = (function() {
+        for (let i = 0; i < 9; ++i) {
+            const cell = document.createElement('div');
+            cell.classList.add('cell');
+
+            // set the mark of each cell
+            cell.textContent = gameboard.getBoard()[Math.floor(i/3)][i%3].getMark();
+            boardDiv.appendChild(cell);
+
+            // add an event listener to each cell
+            cell.addEventListener('click', () => {
+                if (cell.textContent == '') {
+                    cell.textContent = game.getCurrentPlayer().getMark();
+                    game.playRound(Math.floor(i/3), i%3);
+                    updateText();
+                } 
+            });
+        }
+        updateText();
+    })();
 })();

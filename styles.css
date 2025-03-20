@@ -1,0 +1,41 @@
+:root {
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+
+/* main styles */
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* board styles */
+#board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    width: 500px;
+    gap: 1px;
+
+    justify-content: center;
+}
+
+.cell {
+    box-shadow: 0 0 0 1px black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+/* text styles */
+p { font-size: clamp(1rem, 2vw, 1.5rem); }
