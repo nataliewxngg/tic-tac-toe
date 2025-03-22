@@ -124,7 +124,6 @@ const game = (function() {
         // check if the game is over
         if (gameboard.checkGameStatus() != null) {   
             console.log(`${currentPlayer.getName()} wins!`);
-            // restartGame();
             return;
         }
 
@@ -182,17 +181,19 @@ const displayController = (function() {
 
     // add an event listener to respond to the click of each individual cell
     const addEventListeners = (cells) => {
-        cells.forEach(cell => {
-            cell.addEventListener('click', () => {
-                console.log(cell.textContent);
-                if (cell.textContent == '') {
-                    cell.textContent = game.getCurrentPlayer().getMark();
-                    game.playRound(cell.getAttribute('row'), cell.getAttribute('col'));
-                    updateBoard();
-                    updateText();
-                } 
-            });
-        });   
+        if (gameboard.checkGameStatus() != null) {
+            cells.forEach(cell => {
+                cell.addEventListener('click', () => {
+                    console.log(cell.textContent);
+                    if (cell.textContent == '') {
+                        cell.textContent = game.getCurrentPlayer().getMark();
+                        game.playRound(cell.getAttribute('row'), cell.getAttribute('col'));
+                        updateBoard();
+                        updateText();
+                    } 
+                });
+            });   
+        }
     }
 
     // add an event listener to respond to game start
