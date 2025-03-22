@@ -64,7 +64,16 @@ const gameboard = (function() {
         )
             return board[0][0].getMark();
 
-        return null;
+        // check for a tie
+        for (let i = 0; i < rows; ++i) {
+            for (let j = 0; j < cols; ++j) {
+                if (board[i][j].getMark() == null)
+                    return null;
+            }
+        }
+
+        // return 'tie' if the game is tied
+        return 'tie';
     }
 
     // clear the gameboard
@@ -122,7 +131,9 @@ const game = (function() {
         gameboard.printBoard();
 
         // check if the game is over
-        if (gameboard.checkGameStatus() != null) {   
+        
+        if (gameboard.checkGameStatus() == 'tie') console.log('It\'s a Tie!');
+        else if (gameboard.checkGameStatus() != null) {
             console.log(`${currentPlayer.getName()} wins!`);
             return;
         }
@@ -164,10 +175,10 @@ const displayController = (function() {
 
     // updates the message depending on game status
     const updateText = () => {
-        if (gameboard.checkGameStatus() != null) {
+        if (gameboard.checkGameStatus() == 'tie') playerDiv.textContent = 'It\'s a tie!';
+        else if (gameboard.checkGameStatus() != null) {
             playerDiv.textContent = `${game.getCurrentPlayer().getName()} wins!`;
-            console.log('wow!');
-        }
+        } 
         else
             playerDiv.textContent = `It's ${game.getCurrentPlayer().getName()}'s turn!`;
     }
@@ -181,7 +192,7 @@ const displayController = (function() {
 
     // add an event listener to respond to the click of each individual cell
     const addEventListeners = (cells) => {
-        if (gameboard.checkGameStatus() != null) {
+        if (gameboard.checkGameStatus() == null) {
             cells.forEach(cell => {
                 cell.addEventListener('click', () => {
                     console.log(cell.textContent);
