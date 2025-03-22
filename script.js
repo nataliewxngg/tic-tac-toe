@@ -139,6 +139,9 @@ const game = (function() {
     }
 
     const setPlayerName = (playerNum, newName) => {
+        if (newName.trim() == '')
+            playerNum == 1 ? newName = 'Player 1' : newName = 'Player 2'; 
+            
         playerNum == 1 ? player1 = Player(newName, 'X') : player2 = Player(newName, 'O');
         currentPlayer = player1;
     }
@@ -156,6 +159,7 @@ const game = (function() {
 const displayController = (function() {
     const boardDiv = document.getElementById('board');
     const playerDiv = document.querySelector('p');
+    const main = document.querySelector('main');
     const form = document.querySelector('form');
     const restartButton = document.getElementById('restart');
 
@@ -199,6 +203,10 @@ const displayController = (function() {
         // set the names of the players
         game.setPlayerName(1, data.get('player-1'));
         game.setPlayerName(2, data.get('player-2'));
+
+        // append the gameboard to the DOM
+        form.style.display = 'none';
+        main.style.display = 'flex';
 
         updateBoard();
     });
