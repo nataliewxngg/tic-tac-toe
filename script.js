@@ -108,8 +108,8 @@ function Player(name, mark) {
 }
 
 const game = (function() {
-    const player1 = Player('Natalie', 'X');
-    const player2 = Player('Lorraine', 'O');
+    let player1 = Player('Player 1', 'X');
+    let player2 = Player('Player 2', 'O');
     let currentPlayer = player1;
     console.log(`It's ${currentPlayer.getName()}'s turn!`);
 
@@ -124,13 +124,12 @@ const game = (function() {
         // check if the game is over
         if (gameboard.checkGameStatus() != null) {   
             console.log(`${currentPlayer.getName()} wins!`);
-            restartGame();
-            return ;
+            // restartGame();
+            return;
         }
 
         // update the current player
         currentPlayer == player1 ? currentPlayer = player2 : currentPlayer = player1;
-        console.log(`It's ${currentPlayer.getName()}'s turn!`);
     }
 
     // refresh variables for a new game
@@ -139,19 +138,43 @@ const game = (function() {
         currentPlayer = player1;    
     }
 
+    const setPlayerName = (playerNum, newName) => {
+        playerNum == 1 ? player1 = Player(newName, 'X') : player2 = Player(newName, 'O');
+        currentPlayer = player1;
+    }
+    
     const getCurrentPlayer = () => currentPlayer;
 
     return {
         playRound,
-        getCurrentPlayer
+        getCurrentPlayer,
+        setPlayerName,
+        restartGame
     }
 })();
 
 const displayController = (function() {
     const boardDiv = document.getElementById('board');
     const playerDiv = document.querySelector('p');
+    const form = document.querySelector('form');
+    const restartButton = document.getElementById('restart');
 
-    const updateText = () => { playerDiv.textContent = `It's ${game.getCurrentPlayer().getName()}'s turn!`;}
+    // updates the message depending on game status
+    const updateText = () => {
+        if (gameboard.checkGameStatus() != null) {
+            playerDiv.textContent = `${game.getCurrentPlayer().getName()} wins!`;
+            console.log('wow!');
+        }
+        else
+            playerDiv.textContent = `It's ${game.getCurrentPlayer().getName()}'s turn!`;
+    }
+
+    // add an event listener to respond to game restart
+    restartButton.addEventListener('click', () => {
+        game.restartGame();
+        updateBoard();
+        updateText();
+    })
 
     // add an event listener to respond to the click of each individual cell
     const addEventListeners = (cells) => {
@@ -167,6 +190,18 @@ const displayController = (function() {
             });
         });   
     }
+
+    // add an event listener to respond to game start
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const data = new FormData(e.target);
+
+        // set the names of the players
+        game.setPlayerName(1, data.get('player-1'));
+        game.setPlayerName(2, data.get('player-2'));
+
+        updateBoard();
+    });
     
     // display the most updated version of the gameboard in the DOM
     const updateBoard = () => {
@@ -186,7 +221,4 @@ const displayController = (function() {
         addEventListeners(document.querySelectorAll('.cell'));
         updateText();
     }
-
-    // initial display of the game
-    updateBoard();
 })();
