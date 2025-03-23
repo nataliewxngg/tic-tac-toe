@@ -1,6 +1,14 @@
 :root {
     font-family: "Inter", sans-serif;
     font-weight: 600;
+
+    --button-rad: 10px;
+    --primary-background: #283618;
+    --primary-color: #606c38;
+    --primary-shadow: #3f5626;
+    --secondary-bg: #dda15e;
+    --secondary-color: #bc6c25;
+    --accent-color: #fefae0;
 }
 
 body {
@@ -8,10 +16,11 @@ body {
     min-height: 100vh;
     justify-content: center;
     align-items: center;
-
-    display: flex;
     flex-direction: column;
     gap: 2rem;
+
+    background-color: var(--primary-background);
+    color: var(--accent-color);
 }
 
 /* header styles */
@@ -25,6 +34,34 @@ form {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+}
+
+form input {
+    background-color: var(--secondary-bg);
+    border: 5px solid var(--secondary-color);
+
+    outline: none;
+    border-radius: var(--button-rad);
+    padding: 1rem;
+}
+
+form input:first-child { margin-top: 1rem; }
+
+form button {
+    background-color: var(--primary-shadow);
+    border: 5px solid var(--primary-color);
+    border-radius: var(--button-rad);
+    color: var(--accent-color);
+
+    padding: 0.5rem 1rem;
+    margin-top: 2rem;
+
+    transition: 800ms;
+}
+
+form button:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-shadow);
 }
 
 /* main styles */
