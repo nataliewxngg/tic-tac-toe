@@ -171,6 +171,7 @@ const displayController = (function() {
     const main = document.querySelector('main');
     const form = document.querySelector('form');
     const restartButtons = document.querySelectorAll('.restart');
+    const menuButton = document.querySelector('.menu');
     const dialog = document.querySelector('dialog');
 
     // updates the message depending on game status
@@ -192,6 +193,13 @@ const displayController = (function() {
             updateText();
         });
     });
+
+    // add an event listener to respond to the return to menu button
+    menuButton.addEventListener('click', () => {
+        main.style.display = 'none';
+        form.style.display = 'flex';
+        dialog.close();
+    }); 
 
     const addEventListeners = (cells) => {
         if (gameboard.checkGameStatus() == null) {
