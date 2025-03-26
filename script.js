@@ -131,7 +131,6 @@ const game = (function() {
         gameboard.printBoard();
 
         // check if the game is over
-        
         if (gameboard.checkGameStatus() == 'tie') console.log('It\'s a Tie!');
         else if (gameboard.checkGameStatus() != null) {
             console.log(`${currentPlayer.getName()} wins!`);
@@ -168,27 +167,31 @@ const game = (function() {
 
 const displayController = (function() {
     const boardDiv = document.getElementById('board');
-    const playerDiv = document.querySelector('p');
+    const paragraphs = document.querySelectorAll('p');
     const main = document.querySelector('main');
     const form = document.querySelector('form');
-    const restartButton = document.getElementById('restart');
+    const restartButtons = document.querySelectorAll('.restart');
+    const dialog = document.querySelector('dialog');
 
     // updates the message depending on game status
     const updateText = () => {
-        if (gameboard.checkGameStatus() == 'tie') playerDiv.textContent = 'It\'s a tie!';
-        else if (gameboard.checkGameStatus() != null) {
-            playerDiv.textContent = `${game.getCurrentPlayer().getName()} wins!`;
-        } 
-        else
-            playerDiv.textContent = `It's ${game.getCurrentPlayer().getName()}'s turn!`;
+        if (gameboard.checkGameStatus() == 'tie' || gameboard.checkGameStatus() != null) {
+            dialog.showModal();
+            gameboard.checkGameStatus() == 'tie' ? paragraphs.forEach(paragraph => paragraph.textContent = 'It\'s a tie!') : paragraphs.forEach(paragraph => paragraph.textContent = `${game.getCurrentPlayer().getName()} wins!`);
+        }
+        else 
+            paragraphs.forEach(paragraph => paragraph.textContent = `It's ${game.getCurrentPlayer().getName()}'s turn!`);
     }
 
-    // add an event listener to respond to game restart
-    restartButton.addEventListener('click', () => {
-        game.restartGame();
-        updateBoard();
-        updateText();
-    })
+    // add an event listener to respond to game restarts
+    restartButtons.forEach(restartButton => {
+        restartButton.addEventListener('click', () => {
+            game.restartGame();
+            dialog.close();
+            updateBoard();
+            updateText();
+        });
+    });
 
     const addEventListeners = (cells) => {
         if (gameboard.checkGameStatus() == null) {
