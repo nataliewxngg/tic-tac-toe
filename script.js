@@ -198,6 +198,7 @@ const displayController = (function() {
     menuButton.addEventListener('click', () => {
         main.style.display = 'none';
         form.style.display = 'flex';
+        game.restartGame();
         dialog.close();
     }); 
 
