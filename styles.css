@@ -18,10 +18,18 @@ body {
     color: var(--primary-color);
 }
 
+button, input { border: 1px solid var(--primary-color); }
+button { transition: 800ms; }
+
+button:hover {
+    background-color: var(--hover-mask);
+    cursor: pointer;
+}
+
 /* header styles */
 header h1 {
     margin: 0;
-    font-size: clamp(2rem, 5vw, 3rem);
+    font-size: clamp(2.5rem, 5vw, 3rem);
 }
 
 /* form styles */
@@ -32,9 +40,6 @@ form {
 }
 
 form input {
-    border: 1px solid var(--primary-color);
-
-    outline: none;
     border-radius: var(--rad);
     padding: 1rem;
 }
@@ -42,18 +47,11 @@ form input {
 form input:first-child { margin-top: 1rem; }
 
 form button {
-    border: 2px solid var(--primary-color);
+    border: 1px solid var(--primary-color);
     border-radius: var(--rad);
 
     padding: 1rem;
     margin-top: 2rem;
-
-    transition: 800ms;
-}
-
-form button:hover {
-    background-color: var(--hover-mask);
-    cursor: pointer;
 }
 
 /* main styles */
@@ -66,9 +64,11 @@ main {
 /* board styles */
 #board {
     display: grid;
-    grid-template-columns: repeat(3, 100px);
-    grid-template-rows: repeat(3, 100px);
-    width: 500px;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    width: min(300px, 60vw);
+    height: min(300px, 60vw);
+
     gap: 1px;
 
     justify-content: center;
@@ -87,6 +87,12 @@ main {
 p { 
     font-size: clamp(1rem, 2vw, 1.5rem); 
     text-align: center;
+}
+
+/* restart button styles */
+button.restart {
+    padding: 0.5rem 2rem;
+    border-radius: var(--rad);
 }
 
 /* dialog styles */
@@ -110,6 +116,4 @@ dialog button:hover {
     cursor: pointer;
 }
 
-dialog::backdrop {
-    background-color: var(--hover-mask);
-}
+dialog::backdrop { background-color: var(--hover-mask); }
