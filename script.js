@@ -190,10 +190,11 @@ const displayController = (function() {
         updateText();
     })
 
-    // add an event listener to respond to the click of each individual cell
     const addEventListeners = (cells) => {
         if (gameboard.checkGameStatus() == null) {
+            
             cells.forEach(cell => {
+                // add an event listener to respond to the click of each individual cell
                 cell.addEventListener('click', () => {
                     console.log(cell.textContent);
                     if (cell.textContent == '') {
@@ -203,6 +204,9 @@ const displayController = (function() {
                         updateText();
                     } 
                 });
+
+                // add an event listener to respond to the hover of each individual cell
+                cell.addEventListener('mouseover', () => cell.textContent == '' ? cell.style.cursor = 'pointer' : cell.style.cursor = 'auto' ) 
             });   
         }
     }
